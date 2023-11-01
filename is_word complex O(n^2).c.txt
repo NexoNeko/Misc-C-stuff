@@ -1,0 +1,1011 @@
+=====================
+Latest
+=====================
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int is_word(char *);
+char *sanitize_word(char *);
+int end_result(char *pointer, char value);
+
+/**
+ *  Main function
+ */
+int main() {
+    char *word = "l   umb---erjac ks";
+    printf("%s\nIs word?: ", word);
+    is_word(word) == 0 ? putchar('n') : putchar('s');
+
+    return 0;
+}
+
+/**
+ * Check if word is an isogram in (O n^2)
+ * Checks for special characters
+ * Case sensitive
+ * @word: word to check.
+ * return: int, 0 for false, 1 for true.
+ */
+int is_word(char *word)
+{
+    int i, j = 0;
+    int base_i, base_j;
+    char word_top, word_bottom, result = 'N';
+    char *sane_word = sanitize_word(word);
+
+    i = (strlen(sane_word) - 1);
+
+    /** For strings containing only two characters */
+    if (i == 1 && sane_word[0] != sane_word[1])
+        return (end_result(sane_word, 'T'));
+
+    base_i = i;
+    base_j = j;
+    while(base_j < base_i)
+    {
+        word_top = sane_word[base_i];
+        word_bottom = sane_word[base_j];
+        while (j < i)
+        {
+            j++;
+            i--;
+            if (j < i)
+            {
+                if (word_top == sane_word[i])
+                    result = 'F';
+                if (word_bottom == sane_word[j])
+                    result = 'F';
+                if (word_bottom == sane_word[i])
+                    result = 'F';
+                if (word_top == sane_word[j])
+                    result = 'F';
+                if (word_bottom == word_top)
+                    result = 'F';
+                    /**This check is required for words like 'hello'*/
+                if (sane_word[j+1] == sane_word[i] && j+1 != i)
+                    result = 'F';
+                /**
+                 * Check to do an early return
+                 */
+                if (result != 'N')
+                    return (end_result(sane_word, 'F'));
+            }
+        }
+        base_j++;
+        base_i--;
+        i = base_i;
+        j = base_j;
+    }
+    return(end_result(sane_word, 'T'));
+}
+
+/**
+ * Removes spaces and dashes from word, sanitizing it.
+ *@word: word to sanitize
+ *return: char *, Pointer with sanitized word
+ */
+char *sanitize_word(char *word)
+{
+    int i, j = 0;
+    char *sane_word = calloc(strlen(word) + 1, sizeof(char));
+
+    for (i = 0; word[i]; i++)
+    {
+        if (word[i] != ' ' && word[i] != '-')
+        {
+            sane_word[j] = word[i];
+            j++;
+        }
+    }
+    return(sane_word);
+}
+
+/**
+ * Frees a pointer and returns a value
+ */
+int end_result(char *pointer, char value)
+{
+    free(pointer);
+    if (value == 'F')
+        return(0);
+    return(1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=============================================
+Ver7
+=============================================
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int is_word(char *);
+char *sanitize_word(char *);
+
+/**
+ *  Main function
+ */
+int main() {
+    char *word = "hello";
+    printf("%s\nIs word?: ", word);
+    is_word(word) == 0 ? putchar('n') : putchar('s');
+
+    return 0;
+}
+
+/**
+ *  Check if word is an isogram
+ * @word: word to check.
+ * return: int, 0 for false, 1 for true.
+ */
+int is_word(char *word)
+{
+    int i, j = 0;
+    int base_i, base_j;
+    char word_top, word_bottom, result = 'N';
+    char *sane_word = sanitize_word(word);
+
+    i = (strlen(sane_word) - 1);
+
+    /** For strings containing only two characters */
+    if (i == 1 && sane_word[0] != sane_word[1])
+    {
+        free(sane_word);
+        return (1);
+    }
+
+    base_i = i;
+    base_j = j;
+    while(base_j < base_i)
+    {
+        word_top = sane_word[base_i];
+        word_bottom = sane_word[base_j];
+        while (j < i)
+        {
+            j++;
+            i--;
+            if (j < i)
+            {
+                if (word_top == sane_word[i])
+                    result = 'F';
+                if (word_bottom == sane_word[j])
+                    result = 'F';
+                if (word_bottom == sane_word[i])
+                    result = 'F';
+                if (word_top == sane_word[j])
+                    result = 'F';
+                if (word_bottom == word_top)
+                    result = 'F';
+                    /**This check is required for words like 'hello'*/
+                if (sane_word[j+1] == sane_word[i] && j+1 != i)
+                    result = 'F';
+                /**
+                 * Check to do an early return
+                 */
+                if (result != 'N')
+                {
+                    free(sane_word);
+                    return(0);
+                }
+            }
+        }
+        base_j++;
+        base_i--;
+        i = base_i;
+        j = base_j;
+    }
+    free(sane_word);
+    return(1);
+}
+
+/**
+ * Removes spaces and dashes from word, sanitizing it.
+ *@word: word to sanitize
+ *return: char *, Pointer with sanitized word
+ */
+char *sanitize_word(char *word)
+{
+    int i, j = 0;
+    char *sane_word = calloc(strlen(word) + 1, sizeof(char));
+
+    for (i = 0; word[i]; i++)
+    {
+        if (word[i] != ' ' && word[i] != '-')
+        {
+            sane_word[j] = word[i];
+            j++;
+        }
+    }
+    return(sane_word);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=============================================
+Ver 6
+=============================================
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int is_word(char *);
+char *sanitize_word(char *);
+char set_result(char result, char value);
+
+/**
+ *  Main function
+ */
+int main() {
+    char *word = "helloworld;
+    printf("%s\nIs word?: ", word);
+    is_word(word) == 0 ? putchar('n') : putchar('s');
+
+    return 0;
+}
+
+/**
+ *  Check if word is an isogram
+ * @word: word to check.
+ * return: int, 0 for false, 1 for true.
+ */
+int is_word(char *word)
+{
+    int i, j = 0;
+    int base_i, base_j;
+    char word_top, word_bottom, result = 'N';
+    char *sane_word = sanitize_word(word);
+
+    i = (strlen(sane_word) - 1);
+
+    /** For strings containing only two characters
+    The string will automatically fail the loop check if it advances.*/
+    if (i == 1 && sane_word[0] != sane_word[1])
+        result = set_result(result, 'T');
+
+    base_i = i;
+    base_j = j;
+    while(base_j < base_i)
+    {
+        word_top = sane_word[base_i];
+        word_bottom = sane_word[base_j];
+        while (j < i)
+        {
+            j++;
+            i--;
+            if (j < i)
+            {
+                if (word_top == sane_word[i])
+                    result = set_result(result, 'F');
+                if (word_bottom == sane_word[j])
+                    result = set_result(result, 'F');
+                if (word_bottom == sane_word[i])
+                    result = set_result(result, 'F');
+                if (word_top == sane_word[j])
+                    result = set_result(result, 'F');
+                if (word_bottom == word_top)
+                    result = set_result(result, 'F');
+                    /**This check is required for words like 'hello'
+                     * in which j == i at char repeat.
+                    */
+                if (sane_word[j+1] == sane_word[i] && j+1 != i)
+                    result = set_result(result, 'F');
+            }
+        }
+        base_j++;
+        base_i--;
+        i = base_i;
+        j = base_j;
+    }
+
+    free(sane_word);
+    if (result == 'F')
+        return(0);
+    return(1);
+}
+
+/**
+ * Removes spaces and dashes from word, sanitizing it.
+ *@word: word to sanitize
+ *return: char *, Pointer with sanitized word
+ */
+char *sanitize_word(char *word)
+{
+    int i, j = 0;
+    char *sane_word = calloc(strlen(word) + 1, sizeof(char));
+
+    for (i = 0; word[i]; i++)
+    {
+        if (word[i] != ' ' && word[i] != '-')
+        {
+            sane_word[j] = word[i];
+            j++;
+        }
+    }
+    return(sane_word);
+}
+
+/**
+ * Modifies the value of result boolean
+ * Only if the initial value has not been set.
+ * @result: current value
+ * @value: desired value
+ * return: char, result || value
+ */
+char set_result(char result, char value)
+{
+    if (result == 'N')
+        return(value);
+    return (result);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::Doodles:::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::
+
+
+
+
+=============================================
+Ver1
+=============================================
+#include <stdio.h>
+
+is_word(char *);
+
+int main() {
+    char *word = "subdermatoglyphic";
+    printf("%s\nIs word?: ", word);
+    is_word(word) == 0 ? putchar('n') : putchar('s');
+
+    return 0;
+}
+
+is_word(char *word)
+{
+    int i, j = 0;
+    char word_top, word_bottom;
+    i = (strlen(word) - 1);
+
+    /** For strings containing only two characters, make the check here at the start.
+    The string will automatically fail the loop check if it advances.*/
+    if (i == 1 && word[0] != word[1])
+        return(1);
+
+    word_top = word[i];
+    word_bottom = word[0];
+
+    while (j != i)
+    {
+        j++;
+        i--;
+        if (word_top == word[i])
+            return(0);
+        if (word_bottom == word[j])
+            return(0);
+        if (word_bottom == word_top)
+            return(0);
+    }
+    return(1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===========================================
+Ver2
+===========================================
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int is_word(char *);
+char *sanitize_word(char *);
+
+int main() {
+    char *word = "subderm a-togly   phi.--c";
+    printf("%s\nIs word?: ", word);
+    is_word(word) == 0 ? putchar('n') : putchar('s');
+
+    return 0;
+}
+
+int is_word(char *word)
+{
+    int i, j = 0;
+    char word_top, word_bottom;
+    char *sane_word = sanitize_word(word);
+
+    i = (strlen(sane_word) - 1);
+
+    /** For strings containing only two characters, make the check here at the start.
+    The string will automatically fail the loop check if it advances.*/
+    if (i == 1 && sane_word[0] != sane_word[1])
+    {
+        free(sane_word);
+        return(1);
+    }
+
+    word_top = sane_word[i];
+    word_bottom = sane_word[0];
+
+    while (j != i)
+    {
+        j++;
+        i--;
+        if (word_top == sane_word[i])
+        {
+            free(sane_word);
+            return(0);
+        }
+        if (word_bottom == sane_word[j])
+        {
+            free(sane_word);
+            return(0);
+        }
+        if (word_bottom == word_top)
+        {
+            free(sane_word);
+            return(0);
+        }
+    }
+    free(sane_word);
+    return(1);
+}
+
+char *sanitize_word(char *word)
+{
+    int i, j = 0;
+    char *sane_word = calloc(strlen(word) + 1, sizeof(char));
+
+    for (i = 0; word[i]; i++)
+    {
+        if (word[i] != ' ' && word[i] != '-')
+        {
+            sane_word[j] = word[i];
+            j++;
+        }
+    }
+
+    printf("\nsane word: %s\n", sane_word);
+    return(sane_word);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=================================================
+Ver3
+=================================================
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int is_word(char *);
+char *sanitize_word(char *);
+char set_result(char result, char value);
+
+/**
+ *  Main function
+ */
+int main() {
+    char *word = "abc!defghi jjklmnopqrs tuvwxyz";
+    printf("%s\nIs word?: ", word);
+    is_word(word) == 0 ? putchar('n') : putchar('s');
+
+    return 0;
+}
+
+/**
+ *  Check if word is an isowhatever
+ * @word: word to check.
+ * return: int, 0 for false, 1 for true.
+ */
+int is_word(char *word)
+{
+    int i, j = 0;
+    char word_top, word_bottom, result = 'N';
+    char *sane_word = sanitize_word(word);
+
+    i = (strlen(sane_word) - 1);
+
+    /** For strings containing only two characters
+    The string will automatically fail the loop check if it advances.*/
+    if (i == 1 && sane_word[0] != sane_word[1])
+        result = set_result(result, 'T');
+
+    word_top = sane_word[i];
+    word_bottom = sane_word[0];
+
+    while (j <= i)
+    {
+        j++;
+        i--;
+        if (word_top == sane_word[i])
+            result = set_result(result, 'F');
+        if (word_bottom == sane_word[j])
+            result = set_result(result, 'F');
+        if (word_bottom == word_top)
+            result = set_result(result, 'F');
+    }
+    free(sane_word);
+    if (result == 'F')
+        return(0);
+    return(1);
+}
+
+/**
+ * Removes spaces and dashes from word, sanitizing it.
+ *@word: word to sanitize
+ *return: char *, Pointer with sanitized word
+ */
+char *sanitize_word(char *word)
+{
+    int i, j = 0;
+    char *sane_word = calloc(strlen(word) + 1, sizeof(char));
+
+    for (i = 0; word[i]; i++)
+    {
+        if (word[i] != ' ' && word[i] != '-')
+        {
+            sane_word[j] = word[i];
+            j++;
+        }
+    }
+    return(sane_word);
+}
+
+/**
+ * Modifies the value of result boolean
+ * Only if the initial value has not been set.
+ * @result: current value
+ * @value: desired value
+ * return: char, result || value
+ */
+char set_result(char result, char value)
+{
+    if (result == 'N')
+        return(value);
+    return (result);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=================================================
+Ver4
+=================================================
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int is_word(char *);
+char *sanitize_word(char *);
+char set_result(char result, char value);
+
+/**
+ *  Main function
+ */
+int main() {
+    char *word = "luemberjackz";
+    printf("%s\nIs word?: ", word);
+    is_word(word) == 0 ? putchar('n') : putchar('s');
+
+    return 0;
+}
+
+/**
+ *  Check if word is an isowhatever
+ * @word: word to check.
+ * return: int, 0 for false, 1 for true.
+ */
+int is_word(char *word)
+{
+    int i, j = 0;
+    int base_i, base_j;
+    char word_top, word_bottom, result = 'N';
+    char *sane_word = sanitize_word(word);
+
+    i = (strlen(sane_word) - 1);
+
+    /** For strings containing only two characters
+    The string will automatically fail the loop check if it advances.*/
+    if (i == 1 && sane_word[0] != sane_word[1])
+        result = set_result(result, 'T');
+
+    base_i = i;
+    base_j = j;
+    while(base_j < base_i)
+    {
+        word_top = sane_word[base_i];
+        word_bottom = sane_word[base_j];
+        while (j < i)
+        {
+            j++;
+            i--;
+            if (j < i)
+            {
+                if (word_top == sane_word[i])
+                    result = set_result(result, 'F');
+                if (word_bottom == sane_word[j])
+                    result = set_result(result, 'F');
+                if (word_bottom == sane_word[i])
+                    result = set_result(result, 'F');
+                if (word_top == sane_word[j])
+                    result = set_result(result, 'F');
+                if (word_bottom == word_top)
+                    result = set_result(result, 'F');
+            }
+        }
+        base_j++;
+        base_i--;
+        i = base_i;
+        j = base_j;
+    }
+    
+    free(sane_word);
+    if (result == 'F')
+        return(0);
+    return(1);
+}
+
+/**
+ * Removes spaces and dashes from word, sanitizing it.
+ *@word: word to sanitize
+ *return: char *, Pointer with sanitized word
+ */
+char *sanitize_word(char *word)
+{
+    int i, j = 0;
+    char *sane_word = calloc(strlen(word) + 1, sizeof(char));
+
+    for (i = 0; word[i]; i++)
+    {
+        if (word[i] != ' ' && word[i] != '-')
+        {
+            sane_word[j] = word[i];
+            j++;
+        }
+    }
+    return(sane_word);
+}
+
+/**
+ * Modifies the value of result boolean
+ * Only if the initial value has not been set.
+ * @result: current value
+ * @value: desired value
+ * return: char, result || value
+ */
+char set_result(char result, char value)
+{
+    if (result == 'N')
+        return(value);
+    return (result);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=================================================
+Ver5
+=================================================
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int is_word(char *);
+char *sanitize_word(char *);
+char set_result(char result, char value);
+
+/**
+ *  Main function
+ */
+int main() {
+    char *word = "Uncopyrightable";
+    printf("%s\nIs word?: ", word);
+    is_word(word) == 0 ? putchar('n') : putchar('s');
+
+    return 0;
+}
+
+/**
+ *  Check if word is an isogram
+ * @word: word to check.
+ * return: int, 0 for false, 1 for true.
+ */
+int is_word(char *word)
+{
+    int i, j = 0;
+    int base_i, base_j;
+    char word_top, word_bottom, result = 'N';
+    char *sane_word = sanitize_word(word);
+
+    i = (strlen(sane_word) - 1);
+
+    /** For strings containing only two characters
+    The string will automatically fail the loop check if it advances.*/
+    if (i == 1 && sane_word[0] != sane_word[1])
+        result = set_result(result, 'T');
+
+    base_i = i;
+    base_j = j;
+    while(base_j < base_i)
+    {
+        word_top = sane_word[base_i];
+        word_bottom = sane_word[base_j];
+        while (j < i)
+        {
+            j++;
+            i--;
+            if (j < i)
+            {
+                if (word_top == sane_word[i])
+                    result = set_result(result, 'F');
+                if (word_bottom == sane_word[j])
+                    result = set_result(result, 'F');
+                if (word_bottom == sane_word[i])
+                    result = set_result(result, 'F');
+                if (word_top == sane_word[j])
+                    result = set_result(result, 'F');
+                if (word_bottom == word_top)
+                    result = set_result(result, 'F');
+                    /** 
+                     * This check is required for words like 'hello'
+                     * in which j == i at char repeat.
+                    */
+                if (sane_word[j+1] == sane_word[i] && j+1 != i)
+                    result = set_result(result, 'F');
+            }
+        }
+        base_j++;
+        base_i--;
+        i = base_i;
+        j = base_j;
+    }
+    
+    free(sane_word);
+    if (result == 'F')
+        return(0);
+    return(1);
+}
+
+/**
+ * Removes spaces and dashes from word, sanitizing it.
+ *@word: word to sanitize
+ *return: char *, Pointer with sanitized word
+ */
+char *sanitize_word(char *word)
+{
+    int i, j = 0;
+    char *sane_word = calloc(strlen(word) + 1, sizeof(char));
+
+    for (i = 0; word[i]; i++)
+    {
+        if (word[i] != ' ' && word[i] != '-')
+        {
+            sane_word[j] = word[i];
+            j++;
+        }
+    }
+    return(sane_word);
+}
+
+/**
+ * Modifies the value of result boolean
+ * Only if the initial value has not been set.
+ * @result: current value
+ * @value: desired value
+ * return: char, result || value
+ */
+char set_result(char result, char value)
+{
+    if (result == 'N')
+        return(value);
+    return (result);
+}
